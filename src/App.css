@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  cursor: url(carrot.png), auto;
+  cursor: url(carrot.png) 0 48, auto;
 }
 
 .App-logo {

@@ -5,6 +5,7 @@ import {
   MouseEvent,
   useEffect,
   useState,
+  memo,
 } from "react";
 import { Flex, Box, VStack } from "@chakra-ui/react";
 import { useHeart } from "hooks/useHeart";
@@ -42,7 +43,7 @@ const Eye = forwardRef<HTMLDivElement, DivProps>((_, ref) => {
   );
 });
 
-const Ears = () => {
+const Ears = memo(() => {
   const Ear = ({ pos }: { pos: "left" | "right" }) => (
     <Flex
       w="48px"
@@ -74,9 +75,9 @@ const Ears = () => {
       <Ear pos={"right"} />
     </Flex>
   );
-};
+});
 
-const Hands = () => {
+const Hands = memo(() => {
   const Hand = () => (
     <Flex
       w="48px"
@@ -99,13 +100,46 @@ const Hands = () => {
       <Hand />
     </Flex>
   );
-};
+});
+
+const NoseAndMouth = memo(
+  forwardRef<HTMLDivElement>((props, ref) => {
+    return (
+      <Flex
+        position="relative"
+        justifyContent="center"
+        alignItems="center"
+        flexDirection="column"
+        top="-8px"
+      >
+        <Box
+          bgColor="black"
+          w="24px"
+          h="12px"
+          borderRadius="50%"
+          position="absolute"
+          top="-6px"
+        ></Box>
+        <Box bgColor="#b79380" w="48px" h="24px" borderRadius="33%"></Box>
+        <Box
+          bgColor="white"
+          w="24px"
+          h="12px"
+          borderRadius="16%"
+          position="absolute"
+          top="16px"
+          ref={ref}
+        ></Box>
+      </Flex>
+    );
+  })
+);
 
 export const Gopher = () => {
   const leftEye = useRef() as RefObject<HTMLDivElement>;
   const rightEye = useRef() as RefObject<HTMLDivElement>;
   const { x, y, handleMouseMove } = useMove();
-  const btnRef = useRef() as React.MutableRefObject<HTMLDivElement>;
+  const effectRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const { emitter } = useHeart();
 
   useEffect(() => {
@@ -132,7 +166,7 @@ export const Gopher = () => {
     >
       <VStack
         position="relative"
-        onClick={() => emitter.call(null, btnRef.current)}
+        onClick={() => emitter.call(null, effectRef.current)}
       >
         <Ears />
         <Flex
@@ -149,32 +183,7 @@ export const Gopher = () => {
             <Eye ref={leftEye} />
             <Eye ref={rightEye} />
           </Flex>
-          <Flex
-            position="relative"
-            justifyContent="center"
-            alignItems="center"
-            flexDirection="column"
-            top="-8px"
-          >
-            <Box
-              bgColor="black"
-              w="24px"
-              h="12px"
-              borderRadius="50%"
-              position="absolute"
-              top="-6px"
-            ></Box>
-            <Box bgColor="#b79380" w="48px" h="24px" borderRadius="33%"></Box>
-            <Box
-              bgColor="white"
-              w="24px"
-              h="12px"
-              borderRadius="16%"
-              position="absolute"
-              top="16px"
-              ref={btnRef}
-            ></Box>
-          </Flex>
+          <NoseAndMouth ref={effectRef} />
         </Flex>
         <Hands />
       </VStack>
